@@ -15,7 +15,8 @@
     "@react-three/drei": "9.58.3",
     "three": "0.155.0",
     "swr": "2.2.0",
-    "axios": "1.4.0"
+    "axios": "1.4.0",
+    "next-auth": "4.22.1"
   },
   "devDependencies": {
     "typescript": "5.1.6"

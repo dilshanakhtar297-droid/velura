@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from 'react'
+import { useSession, signIn, signOut } from 'next-auth/react'
 
 type Product = {
   id: number
@@ -10,7 +11,8 @@ type Product = {
 }
 
 export default function AdminIndex(){
-  const [token, setToken] = useState<string | null>(null)
+  const { data: session } = useSession()
+  const token = (session as any)?.accessToken
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
   const [products, setProducts] = useState<Product[]>([])
@@ -19,10 +21,8 @@ export default function AdminIndex(){
   const [selectedProductId, setSelectedProductId] = useState<number | null>(null)
 
   useEffect(()=>{
-    const t = localStorage.getItem('velura_token')
-    if (t) setToken(t)
     fetchProducts()
-  }, [])
+  }, [session])
 
   async function fetchProducts(){
     setLoading(true)
@@ -35,17 +35,10 @@ export default function AdminIndex(){
     setLoading(false)
   }
 
-  async function login(e){
+  async function doSignIn(e){
     e.preventDefault()
-    const res = await fetch(process.env.NEXT_PUBLIC_API_URL + '/auth/login', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ email, password }) })
-    const data = await res.json()
-    if (data.token){
-      setToken(data.token)
-      localStorage.setItem('velura_token', data.token)
-      fetchProducts()
-    } else {
-      alert('login failed')
-    }
+    await signIn('credentials', { redirect: false, email, password })
+    fetchProducts()
   }
 
   async function createProduct(){
@@ -103,8 +96,8 @@ export default function AdminIndex(){
   return (
     <div>
       <h1>Admin — Velura Gifts</h1>
-      {!token ? (
-        <form onSubmit={login} style={{maxWidth:420}}>
+      {!session ? (
+        <form onSubmit={doSignIn} style={{maxWidth:420}}>
           <p>Log in as admin</p>
           <input value={email} onChange={e=>setEmail(e.target.value)} placeholder="email" style={{width:'100%', padding:8, marginBottom:8}} />
           <input type="password" value={password} onChange={e=>setPassword(e.target.value)} placeholder="password" style={{width:'100%', padding:8, marginBottom:8}} />
@@ -112,8 +105,8 @@ export default function AdminIndex(){
         </form>
       ) : (
         <div>
-          <p>Authenticated</p>
-          <button onClick={()=>{ localStorage.removeItem('velura_token'); setToken(null) }}>Logout</button>
+          <p>Authenticated as {session.user?.email}</p>
+          <button onClick={()=>{signOut();}}>Logout</button>
           <hr />
           <button onClick={createProduct}>Create product</button>
           <div style={{marginTop:20}}>
