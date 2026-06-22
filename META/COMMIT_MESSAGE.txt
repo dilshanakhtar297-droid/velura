@@ -1,11 +1,1 @@
-Scaffold: add NextAuth to the Next.js web app (credentials provider that delegates to API /auth/login), wire admin UI to use NextAuth session, add checkout button on product page that creates a Stripe Checkout session, and add admin orders API endpoint.
-
-Files updated/added:
-- web/package.json (added next-auth)
-- web/pages/_app.tsx (SessionProvider)
-- web/pages/api/auth/[...nextauth].ts (NextAuth config)
-- web/pages/admin/index.tsx (migrated to use next-auth session and signIn/signOut)
-- web/pages/product/[slug].tsx (checkout button that calls API /stripe/create-checkout-session)
-- api/src/routes/orders.ts (admin-protected orders list)
-- api/src/index.ts (mount orders router)
-
+Updated: moved API routes into Next.js API routes for single-Vercel deployment (serverless functions). Converted auth, products, upload presign/complete, Stripe webhook/create-session, and orders endpoints into web/pages/api/*. The api/ directory is preserved as a backup but the Next.js app now contains the runtime API suitable for Vercel.
