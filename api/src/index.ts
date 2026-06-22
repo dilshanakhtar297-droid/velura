@@ -3,6 +3,7 @@ import cors from 'cors'
 import bodyParser from 'body-parser'
 import productsRouter from './routes/products'
 import authRouter from './routes/auth'
+import uploadsRouter from './routes/uploads'
 import { PrismaClient } from '@prisma/client'
 import Stripe from 'stripe'
 
@@ -51,6 +52,7 @@ app.use(cors())
 
 app.use('/products', productsRouter)
 app.use('/auth', authRouter)
+app.use('/upload', uploadsRouter)
 
 // Create checkout session for a product
 app.post('/stripe/create-checkout-session', async (req, res) => {

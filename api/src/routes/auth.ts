@@ -1,6 +1,7 @@
 import { Router } from 'express'
 import { PrismaClient } from '@prisma/client'
 import jwt from 'jsonwebtoken'
+import bcrypt from 'bcrypt'
 
 const router = Router()
 const prisma = new PrismaClient()
@@ -13,8 +14,8 @@ router.post('/login', async (req, res) => {
   const user = await prisma.user.findUnique({ where: { email } })
   if (!user) return res.status(401).json({ error: 'invalid credentials' })
 
-  // NOTE: passwords are stored in plain text in the dev seed. Replace with bcrypt in production.
-  if (user.password !== password) return res.status(401).json({ error: 'invalid credentials' })
+  const match = await bcrypt.compare(password, user.password)
+  if (!match) return res.status(401).json({ error: 'invalid credentials' })
 
   const token = jwt.sign({ userId: user.id, email: user.email, role: user.role }, JWT_SECRET, { expiresIn: '7d' })
   res.json({ token })
