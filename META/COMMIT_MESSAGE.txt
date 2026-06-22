@@ -1,0 +1,2 @@
+# How this commit was created
+Scaffolded a starter monorepo with web/ (Next.js) and api/ (Express + Prisma) and Docker Compose for Postgres and MinIO. Branch: velura-starter
