@@ -1,0 +1,8 @@
+{
+  "name": "velura-root",
+  "private": true,
+  "workspaces": [
+    "web",
+    "api"
+  ]
+}
