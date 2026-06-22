@@ -1,2 +1,16 @@
-# How this commit was created
-Scaffolded a starter monorepo with web/ (Next.js) and api/ (Express + Prisma) and Docker Compose for Postgres and MinIO. Branch: velura-starter
+Scaffold: add admin auth, protected product CRUD endpoints, Stripe create-checkout-session and webhook handler, and a basic admin UI (login + simple product CRUD) in web/admin.
+
+Files added/updated:
+- api/package.json (added jsonwebtoken, cors, body-parser)
+- api/src/routes/auth.ts (login endpoint, returns JWT)
+- api/src/utils/auth.ts (requireAdmin middleware)
+- api/src/routes/products.ts (added admin-protected POST/PUT/DELETE)
+- api/src/index.ts (added stripe endpoints and webhook raw handler, mounted routes)
+- web/pages/admin/index.tsx (login + product list + create/delete)
+
+Next steps I recommend I can do automatically:
+- Implement signed S3 upload flow and UI for uploading GLB files to MinIO
+- Add password hashing (bcrypt) and proper NextAuth or session management
+- Implement product edit UI and asset management
+- Add unit tests and CI
+
